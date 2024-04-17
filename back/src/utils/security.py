@@ -49,7 +49,7 @@ async def authenticate_user(session, email: str, password: str) -> dict[Any, Any
             status_code=status.HTTP_400_BAD_REQUEST, detail="user not found"
         )
 
-    if not verify_password(password, user.hashed_password):
+    if not verify_password(password, user.password):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="user password is incorrect"
         )
@@ -80,10 +80,8 @@ async def get_current_user(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="user not found"
         )
-
     setattr(user, "session", session)
-    setattr(user, "token", token)
-    # user["session"] = session
-    # user["token"] = token
 
-    return user
+    user_dict = {"id": user.id, "session": session}
+    return user_dict
+
