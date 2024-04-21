@@ -40,6 +40,12 @@ async def add_user_api(user: UserRegisterSchema, session: AsyncSession = Depends
     - **Остальные**: Все кроме 409 писал не я, так что просто внимательнее в ответ смотри)
     """
 
+    if len(user.password) < 6 or len(user.password) > 40:
+        raise HTTPException(status_code=491, detail="Пароль должен быть больше 6 символов и меньше 40")
+
+    elif len(user.nickname) < 6 or len(user.nickname) > 30:
+        raise HTTPException(status_code=492, detail="Никнейм должен быть больше 6 символов и меньше 30")
+
     user_data = {
         "email": user.email,
         "password": get_password_hash(user.password),

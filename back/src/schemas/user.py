@@ -6,8 +6,8 @@ class UserRegisterSchema(BaseModel):
     """Схема данных для регистрации пользователя."""
 
     email: EmailStr
-    password: constr(min_length=6, max_length=40)
-    nickname: constr(min_length=6, max_length=30)
+    password: str
+    nickname: str
 
 
 class UserMainInfo(BaseModel):
