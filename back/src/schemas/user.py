@@ -10,6 +10,11 @@ class UserRegisterSchema(BaseModel):
     nickname: str
 
 
+class AccessInfo(BaseModel):
+    # access_id: int
+    name: str
+
+
 class UserMainInfo(BaseModel):
     """Схема данных пользователя для главного меню"""
 
@@ -19,6 +24,6 @@ class UserMainInfo(BaseModel):
     tag: str
     level: int
     exp: int
-    gold: int
     gem: int
     date_of_create: datetime.datetime
+    access: AccessInfo

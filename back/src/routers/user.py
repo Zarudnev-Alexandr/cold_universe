@@ -60,7 +60,7 @@ async def add_user_api(user: UserRegisterSchema, session: AsyncSession = Depends
     user_add = await add_user(session, **user_data)
 
     if user_add:
-        return user_add
+        return {f"Пользователь {user.nickname} успешно зарегистрирован"}
 
 
 @users_router.post("/login")
@@ -103,7 +103,7 @@ async def login_api(
 
 
 @users_router.get("/me", response_model=UserMainInfo)
-async def get_me_api(current_user: dict = Depends(get_current_user)) -> UserMainInfo:
+async def get_me_api(current_user: dict = Depends(get_current_user)):
     """
     ### Основная инфа о пользователе
 
@@ -131,9 +131,9 @@ async def get_me_api(current_user: dict = Depends(get_current_user)) -> UserMain
     )
 
 
-@users_router.put("/confirm_mail")
+@users_router.put("/confirm_mail", response_model=UserMainInfo)
 async def put_confirmed_email_api(email_code: int = Form(...),
-                                  current_user: dict = Depends(get_current_user)) -> UserMainInfo:
+                                  current_user: dict = Depends(get_current_user)):
     """
        ### Подтверждение почты
 
@@ -161,6 +161,6 @@ async def put_confirmed_email_api(email_code: int = Form(...),
     if user.email_code != email_code:
         raise HTTPException(status_code=400, detail="Неправильный код подтверждения")
 
-    updated_is_authenticate_confirmed = await update_is_auntificate(current_user['session'], user, current_user['id'])
+    updated_is_authenticate_confirmed = await update_is_auntificate(current_user['session'], user)
 
     return updated_is_authenticate_confirmed
