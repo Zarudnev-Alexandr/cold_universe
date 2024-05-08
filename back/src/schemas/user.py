@@ -1,3 +1,5 @@
+from typing import List
+
 from pydantic import BaseModel, EmailStr, constr
 import datetime
 
@@ -15,6 +17,32 @@ class AccessInfo(BaseModel):
     name: str
 
 
+class CardCreateSchema(BaseModel):
+    name: str
+    lore_description: str
+    image_url: str
+    price_shop: int
+    price_mana: int
+    attack: int
+    defense: int
+    rarity: int
+    classOfCard: str
+
+
+class CardMainInfo(CardCreateSchema):
+    id: int
+
+
+class BoughtCardMainInfo(BaseModel):
+    id: int
+    level: int
+    card: CardMainInfo
+
+
+class BoughtCardCreateSchema(BaseModel):
+    card_in_shop_id: int
+
+
 class UserMainInfo(BaseModel):
     """Схема данных пользователя для главного меню"""
 
@@ -27,3 +55,12 @@ class UserMainInfo(BaseModel):
     gem: int
     date_of_create: datetime.datetime
     access: AccessInfo
+
+
+class CreateDeckSchema(BaseModel):
+    name: str
+
+
+class AddCardsToDeckRequestSchema(BaseModel):
+    deck_id: int
+    card_ids: List[int]

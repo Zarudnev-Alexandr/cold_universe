@@ -3,6 +3,7 @@ from fastapi import FastAPI
 
 # from src import users_router
 # from src.routers.shop import shop_router
+from src.routers.cards import cards_router
 from src.routers.user import users_router
 
 app = FastAPI(debug=True)
@@ -24,7 +25,7 @@ async def start():
 
 
 app.include_router(users_router, prefix="/api/users", tags=["Users"])
-# app.include_router(shop_router, prefix="/api/shop", tags=["Shop"])
+app.include_router(cards_router, prefix="/api/cards", tags=["Cards"])
 
 
 

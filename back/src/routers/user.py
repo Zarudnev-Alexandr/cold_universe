@@ -1,14 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, Form
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import Session
 from starlette import status
 
 from src.db import get_session
 from src.schemas.user import UserRegisterSchema, UserMainInfo
-# from src.utils import get_user, create_user, increment_clicks
-# from src.utils.users import add_password, get_user_for_password, put_is_banned
-# from datetime import datetime, timedelta
 
 from src.utils.security import get_password_hash, authenticate_user, create_access_token, get_current_user
 from src.utils.user import add_user, get_user_by_email, get_me, update_is_auntificate
@@ -121,10 +117,10 @@ async def get_me_api(current_user: dict = Depends(get_current_user)):
 
     - **401 Unauthorized**: Если с токеном напортачить
     """
-    user = await get_me(current_user['session'], current_user['id'])
+    print(current_user.__dict__)
     return (
-        user
-        if user
+        current_user
+        if current_user
         else JSONResponse(
             content={"message": "Такого пользователя не существует"}, status_code=404
         )
@@ -153,7 +149,7 @@ async def put_confirmed_email_api(email_code: int = Form(...),
        - **409 Unauthorized**: Почта уже подтверждена
        - **400 Bad Request**: Неправильный код подтверждения
        """
-    user = await get_me(current_user['session'], current_user['id'])
+    user = await get_me(current_user.session, current_user.id)
 
     if user.is_confirmed_email:
         raise HTTPException(status_code=409, detail="Почта уже подтверждена")
@@ -161,6 +157,6 @@ async def put_confirmed_email_api(email_code: int = Form(...),
     if user.email_code != email_code:
         raise HTTPException(status_code=400, detail="Неправильный код подтверждения")
 
-    updated_is_authenticate_confirmed = await update_is_auntificate(current_user['session'], user)
+    updated_is_authenticate_confirmed = await update_is_auntificate(current_user.session, user)
 
     return updated_is_authenticate_confirmed

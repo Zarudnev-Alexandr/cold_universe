@@ -82,6 +82,6 @@ async def get_current_user(
         )
     setattr(user, "session", session)
 
-    user_dict = {"id": user.id, "session": session}
-    return user_dict
+    # user_dict = {"id": user.id, "session": session}
+    return user
 

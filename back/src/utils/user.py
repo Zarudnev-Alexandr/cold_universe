@@ -14,7 +14,7 @@ async def get_user_by_email(session: AsyncSession, email: str):
     stmt = select(User).where(User.email == email)
 
     result = await session.execute(stmt)
-    user = result.scalar_one_or_none()
+    user = result.unique().scalars().first()
     if user is not None:
         return user
     else:
@@ -25,7 +25,7 @@ async def get_user_by_tag(session: AsyncSession, tag: str):
     stmt = select(User).where(User.tag == tag)
 
     result = await session.execute(stmt)
-    user = result.scalar_one_or_none()
+    user = result.unique().scalars().first()
     if user is not None:
         return user
     else:
@@ -72,7 +72,6 @@ async def add_user(session: AsyncSession, **kwargs) -> User:
 
     user_data["tag"] = user_tag
 
-    print(user_data)
     new_user = User(**user_data)
     session.add(new_user)
     await session.commit()
